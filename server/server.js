@@ -43,7 +43,7 @@ app.use(passport.session());
 
 // Handle CORS issues at these routes
 app.use(cors());
-//app.use("/auth", require("./auth"));
+app.use("/auth", require("./auth"));
 app.use("/api", require("./api"));
 app.use("/", (req, res, next) => res.send("Welcome"));
 
