@@ -1,6 +1,6 @@
 const Sequelize = require("sequelize");
 const db = require("../db");
-const stock = require('./stock')
+const Stock = require("./stock");
 
 const Portfolio = db.define("portfolio", {
   quantity: {
@@ -16,11 +16,12 @@ const Portfolio = db.define("portfolio", {
 Portfolio.getPortfolioStocks = async (portfolio) => {
   const stocks = [];
   let symbols = "";
+
   for (let i = 0; i < portfolio.length; i++) {
     const item = portfolio[i];
-    const stock = await stock.findByPk(item.stockId);
+    const stock = await Stock.findByPk(item.stockId);
 
-    symbols += `${stock.symbol}`;
+    symbols += `${stock.symbol},`;
 
     stocks.push({
       stockId: item.stockId,
@@ -28,14 +29,14 @@ Portfolio.getPortfolioStocks = async (portfolio) => {
       name: stock.name,
       quantity: item.quantity,
     });
-
-    // remove white space at the end
-    symbols = symbols.slice(0, -1);
-
-    const portfolioStocks = { symbols, stocks };
-
-    return portfolioStocks;
   }
+
+  // remove white space at the end
+  symbols = symbols.slice(0, -1);
+
+  const portfolioStocks = { symbols, stocks };
+
+  return portfolioStocks;
 };
 
 module.exports = Portfolio;
